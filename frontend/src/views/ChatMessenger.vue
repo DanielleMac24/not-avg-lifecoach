@@ -2,6 +2,16 @@
   <div id="chat-bot">
     <div id="chat-header">
       <h5 id="chat-header-text">Not Your Average Life Coach</h5>
+      <select name="lang" v-model="chosenLang" class="lang-opt">
+        <option value = 'engl' selected>English</option> 
+        <option value = 'germ'>German</option> 
+        <option value = 'chin'>Chinese</option> 
+        <option value = 'russ'>Russian</option> 
+        <option value = 'fren'>French</option> 
+        <option value = 'span'>Spanish</option> 
+        <option value = 'hind'>Hindu</option> 
+        <option value = 'afri'>Afrikaans</option> 
+        </select>
       <button
         :disabled="userMessages.length === 0 || typingEnabled === false"
         @click="goToChatAnalysisRoute"
@@ -39,8 +49,10 @@ import Vue from "vue";
 import { makeHandshake, postMessage, getBotReply } from "@/services/axios.js";
 import VueChatScroll from "vue-chat-scroll";
 import Bot from "@/components/Bot.vue";
+import translate from "translate";
 import User from "../components/User.vue";
 Vue.use(VueChatScroll);
+translate.engine = "libre";
 
 export default {
   components: {
@@ -56,6 +68,7 @@ export default {
   },
   data() {
     return {
+      chosenLang: "engl",
       nlpRestToken: "",
       userMessage: "",
       reply: "",
@@ -82,7 +95,7 @@ export default {
     initialMessage() {
       this.conversation.push({
         chatStyle: "bot",
-        text: "Hello, I am your Motivational Lifecoach, ask me anything!"
+        text: "Hello, I am your Motivational Lifecoach! Ask me anything... Also feel free to: A) Change the language B) type 'wiki' <text> to search Wikipeadia "
       });
     },
     nlpHandshake() {
@@ -127,15 +140,18 @@ export default {
           this.reply = response.data.activities[(this.botMessageCount += 2)];
           this.allConvoData = response.data;
           this.botMessages.push(this.reply.text);
+          translate(this.reply.text, this.chosenLang).then((data) =>{
           this.conversation.push({
             chatStyle: "bot",
             text: this.reply.text
           });
+         
+          });
         })
-        .catch(error => {
+         .catch(error => {
           console.log(error);
         })
-        .finally(() => {});
+        .finally(() => {})
     },
     updateMessage(currentMessage) {
       this.userMessage = currentMessage;
@@ -168,7 +184,26 @@ export default {
   text-align: center;
   font-size: 16px;
   margin-left: auto;
-  margin-right: 5px;
+  margin-right: 10px;
+}
+.lang-opt {
+    background-color: whitesmoke;
+    background-clip: padding-box;
+    border: 0.25rem solid turquoise;
+    border-radius: 8px;
+    margin-right: 10px;
+    color: purple;
+    display: block;
+    font-size: 1rem;
+    height: fit-content;
+    line-height: 1;
+    padding: 0.15rem 0.65rem;
+    width: 30%;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition-property: border-color, box-shadow;
+    transition-duration: 0.15s, 0.15s;
+    transition-timing-function: ease-in-out, ease-in-out;
+    transition-delay: 0s, 0s;
 }
 
 .button-link:hover {
