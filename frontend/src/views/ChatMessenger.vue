@@ -50,11 +50,9 @@ import { makeHandshake, postMessage, getBotReply } from "@/services/axios.js";
 import VueChatScroll from "vue-chat-scroll";
 import FormSelectPlugin from "bootstrap-vue";
 import Bot from "@/components/Bot.vue";
-import translate from "translate";
 import User from "../components/User.vue";
 Vue.use(FormSelectPlugin);
 Vue.use(VueChatScroll);
-translate.engine = "libre";
 
 export default {
   components: {
@@ -70,7 +68,6 @@ export default {
   },
   data() {
     return {
-      chosenLang: "engl",
       nlpRestToken: "",
       userMessage: "",
       reply: "",
@@ -97,8 +94,7 @@ export default {
     initialMessage() {
       this.conversation.push({
         chatStyle: "bot",
-        text:
-          "Hello, I am your Motivational Lifecoach! Ask me anything... Also feel free to: A) Change the language B) type 'wiki' <text> to search Wikipeadia ",
+        text: "Hello, I am your Motivational Lifecoach, ask me anything!"
       });
     },
     nlpHandshake() {
@@ -164,14 +160,12 @@ export default {
           this.reply = response.data.activities[(this.botMessageCount += 2)];
           this.allConvoData = response.data;
           this.botMessages.push(this.reply.text);
-          translate(this.reply.text, this.chosenLang).then((data) => {
-            this.conversation.push({
-              chatStyle: "bot",
-              text: data,
-            });
+          this.conversation.push({
+            chatStyle: "bot",
+            text: this.reply.text
           });
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         })
         .finally(() => {});
