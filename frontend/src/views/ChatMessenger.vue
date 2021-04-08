@@ -51,8 +51,11 @@ import VueChatScroll from "vue-chat-scroll";
 import FormSelectPlugin from "bootstrap-vue";
 import Bot from "@/components/Bot.vue";
 import User from "../components/User.vue";
+import translate from "translate";
 Vue.use(FormSelectPlugin);
 Vue.use(VueChatScroll);
+
+translate.engine = "libre";
 
 export default {
   components: {
@@ -68,6 +71,7 @@ export default {
   },
   data() {
     return {
+      chosenLang: "engl",
       nlpRestToken: "",
       userMessage: "",
       reply: "",
