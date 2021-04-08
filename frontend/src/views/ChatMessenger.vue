@@ -98,7 +98,7 @@ export default {
     initialMessage() {
       this.conversation.push({
         chatStyle: "bot",
-        text: "Hello, I am your Motivational Lifecoach, ask me anything!"
+        text: "Hello, I am your Motivational Lifecoach, ask me anything!",
       });
     },
     nlpHandshake() {
@@ -117,45 +117,25 @@ export default {
           chatStyle: "user",
           text: this.userMessage,
         });
-        if (this.userMessage.substring(0, 4) == "wiki") {
-          wikipedia
-            .page(this.userMessage.replace("wiki ", ""))
-            .then((data) => {
-              data.summary().then((data) =>
-                translate(data.extract, this.chosenLang).then((data) => {
-                  this.conversation.push({
-                    chatStyle: "bot",
-                    text: data,
-                  });
-                })
-              );
-            })
-            .then((this.userMessage = ""))
-            .catch((error) => {
-              this.conversation.push({
-                chatStyle: "bot",
-                text: "Sorry dude, can't find that article on wikipedia :/",
+       
+        postMessage(this.userMessage, this.nlpRestToken)
+          .then(() => {
+            this.typingEnabled = false;
+            setTimeout(() => {
+              this.typingEnabled = true;
+              this.$nextTick(() => {
+                this.$refs["textinput"].focus();
               });
-            });
-        } else {
-          postMessage(this.userMessage, this.nlpRestToken)
-            .then(() => {
-              this.typingEnabled = false;
-              setTimeout(() => {
-                this.typingEnabled = true;
-                this.$nextTick(() => {
-                  this.$refs["textinput"].focus();
-                });
-                this.getReply();
-              }, Math.random() * 1500 + 500);
-            })
-            .catch((error) => {
-              console.log(error);
-            })
-            .finally(() => {
-              this.userMessage = "";
-            });
-        }
+              this.getReply();
+            }, Math.random() * 1500 + 500);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            this.userMessage = "";
+          });
+      }
       }
     },
     getReply() {
@@ -164,21 +144,23 @@ export default {
           this.reply = response.data.activities[(this.botMessageCount += 2)];
           this.allConvoData = response.data;
           this.botMessages.push(this.reply.text);
-          this.conversation.push({
-            chatStyle: "bot",
-            text: this.reply.text
+          translate(this.reply.text, this.chosenLang).then((data) => {
+            this.conversation.push({
+              chatStyle: "bot",
+              text: data,
+            });
           });
         })
-        .catch(error => {
-          console.log(error);
-        })
+        // .catch((error) => {
+        //   console.log(error);
+        // })
         .finally(() => {});
     },
     updateMessage(currentMessage) {
       this.userMessage = currentMessage;
-    },
-  },
-};
+    }
+  };
+
 </script>
 
 <style lang="scss">
