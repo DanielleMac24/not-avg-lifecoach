@@ -3,14 +3,13 @@
     <div id="chat-header">
       <h5 id="chat-header-text">Not Your Average Life Coach</h5>
       <select name="lang" v-model="chosenLang" class="lang-opt">
-        <option value="engl" selected>English</option>
-        <option value="germ">German</option>
-        <option value="chin">Chinese</option>
-        <option value="russ">Russian</option>
-        <option value="fren">French</option>
-        <option value="span">Spanish</option>
-        <option value="hind">Hindu</option>
-        <option value="afri">Afrikaans</option>
+        <option value="en" selected>English</option>
+        <option value="de">German</option>
+        <option value="zh">Chinese</option>
+        <option value="ru">Russian</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+        <option value="hi">Hindu</option>
       </select>
       <button
         :disabled="userMessages.length === 0 || typingEnabled === false"
@@ -71,7 +70,7 @@ export default {
   },
   data() {
     return {
-      chosenLang: "engl",
+      chosenLang: "en",
       nlpRestToken: "",
       userMessage: "",
       reply: "",
@@ -89,7 +88,7 @@ export default {
   props: {
     msg: String,
   },
-  methods: {
+ methods: {
     goToChatAnalysisRoute() {
       this.$store.commit("setAllConvoData", this.allConvoData);
       this.$store.commit("setConversation", this.conversation);
@@ -98,15 +97,15 @@ export default {
     initialMessage() {
       this.conversation.push({
         chatStyle: "bot",
-        text: "Hello, I am your Motivational Lifecoach, ask me anything!",
+        text: "Hello, I am your Motivational Lifecoach, ask me anything!"
       });
     },
     nlpHandshake() {
       makeHandshake()
-        .then((dataId) => {
+        .then(dataId => {
           this.nlpRestToken = dataId;
         })
-        .catch((error) => {
+        .catch(error => {
           this.error = "handshake api call is unsuccessful";
         });
     },
@@ -115,9 +114,8 @@ export default {
         this.userMessages.push(this.userMessage);
         this.conversation.push({
           chatStyle: "user",
-          text: this.userMessage,
+          text: this.userMessage
         });
-       
         postMessage(this.userMessage, this.nlpRestToken)
           .then(() => {
             this.typingEnabled = false;
@@ -129,36 +127,36 @@ export default {
               this.getReply();
             }, Math.random() * 1500 + 500);
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
           })
           .finally(() => {
             this.userMessage = "";
           });
       }
-      }
     },
     getReply() {
       getBotReply(this.nlpRestToken)
-        .then((response) => {
+        .then(response => {
           this.reply = response.data.activities[(this.botMessageCount += 2)];
           this.allConvoData = response.data;
           this.botMessages.push(this.reply.text);
-          translate(this.reply.text, this.chosenLang).then((data) => {
+           translate(this.reply.text, this.chosenLang).then((data) => {
             this.conversation.push({
               chatStyle: "bot",
               text: data,
             });
           });
         })
-        // .catch((error) => {
-        //   console.log(error);
-        // })
+        .catch(error => {
+          console.log(error);
+        })
         .finally(() => {});
     },
     updateMessage(currentMessage) {
       this.userMessage = currentMessage;
     }
+  }
   };
 
 </script>
