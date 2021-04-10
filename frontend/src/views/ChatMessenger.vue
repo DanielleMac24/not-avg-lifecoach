@@ -39,6 +39,9 @@
       <button @click="sendMessage" class="send-message">
         <img id="send-icon" src="../assets/sendIcon.png" />
       </button>
+      <button @click="wikiMessage" class="wiki-message">
+        <img id="wiki-icon" src="../assets/wiki.png" />
+      </button>
     </div>
   </div>
 </template>
@@ -51,6 +54,7 @@ import FormSelectPlugin from "bootstrap-vue";
 import Bot from "@/components/Bot.vue";
 import User from "../components/User.vue";
 import translate from "translate";
+import wikipedia from "wikipedia";
 Vue.use(FormSelectPlugin);
 Vue.use(VueChatScroll);
 
@@ -134,6 +138,26 @@ export default {
             this.userMessage = "";
           });
       }
+    },
+    wikiMessage() {
+       if (this.userMessage != "") {
+        this.userMessages.push(this.userMessage);
+        this.conversation.push({
+          chatStyle: "user",
+          text: this.userMessage
+        });
+        wikipedia
+        .then((data) => {
+            data.summary()
+        });
+        .then((this.userMessage = ""))
+          .catch((error) => {
+            this.conversation.push({
+              chatStyle: "bot",
+              text: "No such article at Wikipedia",
+            });
+       }
+       } 
     },
     getReply() {
       getBotReply(this.nlpRestToken)
@@ -289,6 +313,13 @@ a {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+.wiki-message {
+   background-color: $light;
+  z-index: 1;
+  border: none;
+  width: 3em;
+  border-radius: 40px;
+}
 .botMessage {
   background-color: $tertiary;
   margin-right: auto;
@@ -340,6 +371,9 @@ header .filler {
 }
 #send-icon {
   width: 1.75rem;
+}
+#wiki-icon {
+  width: 5em;
 }
 
 #chat-bot {
