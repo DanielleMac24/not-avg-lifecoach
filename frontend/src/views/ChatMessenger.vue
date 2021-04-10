@@ -92,7 +92,7 @@ export default {
   props: {
     msg: String,
   },
- methods: {
+  methods: {
     goToChatAnalysisRoute() {
       this.$store.commit("setAllConvoData", this.allConvoData);
       this.$store.commit("setConversation", this.conversation);
@@ -101,15 +101,15 @@ export default {
     initialMessage() {
       this.conversation.push({
         chatStyle: "bot",
-        text: "Hello, I am your Motivational Lifecoach, ask me anything!"
+        text: "Hello, I am your Motivational Lifecoach, ask me anything!",
       });
     },
     nlpHandshake() {
       makeHandshake()
-        .then(dataId => {
+        .then((dataId) => {
           this.nlpRestToken = dataId;
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = "handshake api call is unsuccessful";
         });
     },
@@ -118,7 +118,7 @@ export default {
         this.userMessages.push(this.userMessage);
         this.conversation.push({
           chatStyle: "user",
-          text: this.userMessage
+          text: this.userMessage,
         });
         postMessage(this.userMessage, this.nlpRestToken)
           .then(() => {
@@ -131,7 +131,7 @@ export default {
               this.getReply();
             }, Math.random() * 1500 + 500);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           })
           .finally(() => {
@@ -140,49 +140,54 @@ export default {
       }
     },
     wikiMessage() {
-       if (this.userMessage != "") {
+      if (this.userMessage != "") {
         this.userMessages.push(this.userMessage);
         this.conversation.push({
           chatStyle: "user",
-          text: this.userMessage
+          text: this.userMessage,
         });
         wikipedia
-        .then((data) => {
-            data.summary()
-        });
-        .then((this.userMessage = ""))
+          .page(this.userMessage)
+          .then((data) => {
+            translate(data.intro(), this.chosenLang).then((data) => {
+              this.conversation.push({
+                chatStyle: "bot",
+                text: data,
+              });
+            });
+          })
+          .then((this.userMessage = ""))
           .catch((error) => {
             this.conversation.push({
               chatStyle: "bot",
-              text: "No such article at Wikipedia",
+              text: "Could not find this article on Wikipedia!",
             });
-       }
-       } 
+          });
+      }
     },
     getReply() {
       getBotReply(this.nlpRestToken)
-        .then(response => {
+        .then((response) => {
           this.reply = response.data.activities[(this.botMessageCount += 2)];
           this.allConvoData = response.data;
           this.botMessages.push(this.reply.text);
-           translate(this.reply.text, this.chosenLang).then((data) => {
+          translate(this.reply.text, this.chosenLang).then((data) => {
             this.conversation.push({
               chatStyle: "bot",
               text: data,
             });
           });
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         })
         .finally(() => {});
     },
     updateMessage(currentMessage) {
       this.userMessage = currentMessage;
-    }
-  }
-  };
-
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -230,7 +235,6 @@ export default {
   transition-timing-function: ease-in-out, ease-in-out;
   transition-delay: 0s, 0s;
 }
-
 .button-link:hover {
   background-color: $accentDark;
   color: #ffffff;
@@ -246,12 +250,10 @@ li {
 a {
   color: #42b983;
 }
-
 #chat-header-text {
   margin-left: auto;
   margin-right: auto;
 }
-
 #chat-header {
   margin: 0em 0em auto 0em;
   background-color: $primary;
@@ -266,7 +268,6 @@ a {
   color: $light;
   margin: 3% 2%;
 }
-
 .send-message {
   background-color: $light;
   z-index: 1;
@@ -289,13 +290,11 @@ a {
   width: -webkit-fill-available;
   width: -moz-available;
 }
-
 .filler {
   height: -webkit-fill-available;
   height: -moz-available;
   height: inherit;
 }
-
 .chat-messages {
   display: flex;
   flex-direction: column;
@@ -305,7 +304,6 @@ a {
   height: -moz-available;
   height: 100%;
 }
-
 .chat-message {
   display: flex;
   width: 50%;
@@ -314,9 +312,11 @@ a {
   margin-bottom: 0.5em;
 }
 .wiki-message {
-   background-color: $light;
+  background-color: $light;
   z-index: 1;
   border: none;
+  padding-right: 3em;
+  padding-left: 0em;
   width: 3em;
   border-radius: 40px;
 }
@@ -331,24 +331,20 @@ a {
   padding-bottom: 15px;
   padding-right: 15px;
 }
-
 .botPic {
   width: 3em;
   height: 3em;
 }
-
 .bot-flexbox {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .user-flexbox {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .userMessage {
   background-color: $secondary;
   margin-left: auto;
@@ -365,7 +361,6 @@ a {
   width: 3em;
   height: 3em;
 }
-
 header .filler {
   flex: 0 10000 100%;
 }
@@ -373,9 +368,8 @@ header .filler {
   width: 1.75rem;
 }
 #wiki-icon {
-  width: 5em;
+  width: 3em;
 }
-
 #chat-bot {
   padding: 0px;
   background-color: $light;
