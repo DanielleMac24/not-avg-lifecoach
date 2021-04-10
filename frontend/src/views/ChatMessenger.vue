@@ -149,11 +149,13 @@ export default {
         wikipedia
           .page(this.userMessage)
           .then((data) => {
-            translate(data.intro(), this.chosenLang).then((data) => {
-              this.conversation.push({
-                chatStyle: "bot",
-                text: data,
-              });
+            data.intro().then((data) => {
+              translate(data, this.chosenLang).then((data) => {
+                this.conversation.push({
+                  chatStyle: "bot",
+                  text: data,
+                });
+              })
             });
           })
           .then((this.userMessage = ""))
