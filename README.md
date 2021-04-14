@@ -12,6 +12,7 @@
   - [Unit Tests](#unit-tests)
   - [Extractable APIs](#extractable-apis)
   - [Contributors](#contributors)
+  - [Individual Project](#individual-project)
 
 ## Getting Started
 
@@ -250,3 +251,24 @@ The sentiment analysis is the first page that pops up when you click the analyze
 - Created Level 0/ Level 1 DFDs
 - Created Videos
 
+## Individual Project
+
+### Project Additions
+Two new APIS were added to enhance the bot's existing conversational abilities. The code for both of these can be found in the ChatMessenger.vue file. 
+
+***Note:*** Please follow the [setup instructions](#getting-started) listed above to get the chatbot running properly. Also, the bot works best while using a Google Chrome browser!
+
+### Implemented APIs:
+1. **[Google Translate](https://www.npmjs.com/package/translate)**: 
+
+This API allows for users to select a language from the newly added dropdown menu at the top of the chatbot application. The chatbot will return a response in the user's selected language. The user has the ability to change their language selection throughout the conversation with the chatbot, and the chatbot will adjust accordingly. This feature can also be used in conjunction with the Wikipedia API to return Wikipedia searches in different languages. 
+
+Below is an example of usage:
+
+2. **[Wikipedia](https://www.npmjs.com/package/wikipedia)**: 
+ 
+This feature allows users to search Wikipedia through the chatbot, results will be returned in the chat window as a bot message. Users are able to use this feature by typing their desired search topic into the chatbot and selecting the newly added Wiki button to search instead of the send message button. Users can also select their desired language from the dropdown menu, and Wikipedia results will be returned in this language.
+
+Below is an example of usage:
+
+Below is an example of usage in conjunction with translate:
