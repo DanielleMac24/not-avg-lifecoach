@@ -263,12 +263,21 @@ Two new APIS were added to enhance the bot's existing conversational abilities. 
 
 This API allows for users to select a language from the newly added dropdown menu at the top of the chatbot application. The chatbot will return a response in the user's selected language. The user has the ability to change their language selection throughout the conversation with the chatbot, and the chatbot will adjust accordingly. This feature can also be used in conjunction with the Wikipedia API to return Wikipedia searches in different languages. 
 
-Below is an example of usage:
+<div align="center">
+  <p>Below is an example of usage:</p>
+  <img height="400" src="./Documentation/img/translate.png">
+</div>
 
 2. **[Wikipedia](https://www.npmjs.com/package/wikipedia)**: 
  
 This feature allows users to search Wikipedia through the chatbot, results will be returned in the chat window as a bot message. Users are able to use this feature by typing their desired search topic into the chatbot and selecting the newly added Wiki button to search instead of the send message button. Users can also select their desired language from the dropdown menu, and Wikipedia results will be returned in this language.
 
-Below is an example of usage:
+<div align="center">
+  <p>Below is an example of usage:</p>
+  <img height="400" src="./Documentation/img/wiki1.png">
+</div>
 
-Below is an example of usage in conjunction with translate:
+<div align="center">
+  <p>Below is an example of usage in conjunction with translate:</p>
+  <img height="400" src="./Documentation/img/wiki2.png">
+</div>
